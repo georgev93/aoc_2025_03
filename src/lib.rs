@@ -49,10 +49,10 @@ mod tests {
         assert_eq!(part_2, 0);
     }
 
-    // #[test]
-    // fn actual() {
-    //     let (part_1, part_2) = solve("data/input.txt");
-    //     assert_eq!(part_1, 13919717792);
-    //     assert_eq!(part_2, 14582313461);
-    // }
+    #[test]
+    fn actual() {
+        let (part_1, part_2) = solve("data/input.txt");
+        assert_eq!(part_1, 17316);
+        // assert_eq!(part_2, 14582313461);
+    }
 }

@@ -34,7 +34,7 @@ impl BatteryBank {
             }
         }
 
-        println!("{}", first * 10 + second);
+        // println!("{}", first * 10 + second);
         first * 10 + second
     }
 }
