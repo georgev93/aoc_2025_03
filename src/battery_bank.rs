@@ -12,30 +12,38 @@ impl BatteryBank {
         }
     }
 
-    pub fn get_high_joltage(&self) -> u8 {
-        let mut first = 0u8;
-        let mut second = 0u8;
+    pub fn get_high_joltage(&self, num_of_batteries: usize) -> u64 {
+        let mut total_vec: Vec<u8> = vec![];
 
-        for i in 0..self.batteries.len() - 1 {
-            let curr_value = self.batteries[i];
+        Self::get_highest_possible_from_slice(&self.batteries, &mut total_vec, num_of_batteries);
 
-            if curr_value > first {
-                first = curr_value;
-                second = self.batteries[i + 1];
-            } else if curr_value > second {
-                second = curr_value
+        total_vec.iter().fold(0u64, |acc, &d| acc * 10 + d as u64)
+    }
+
+    fn get_highest_possible_from_slice(
+        input: &[u8],
+        total_vec: &mut Vec<u8>,
+        num_of_batteries: usize,
+    ) {
+        let mut best_position = 0;
+        let mut value_at_best_position = input[0];
+
+        for position in 0..input.len() - num_of_batteries + 1 {
+            let value_at_position = input[position];
+            if value_at_position > value_at_best_position {
+                best_position = position;
+                value_at_best_position = value_at_position;
             }
         }
+        total_vec.push(value_at_best_position);
 
-        {
-            let last_val = *self.batteries.last().unwrap();
-            if last_val > second {
-                second = last_val;
-            }
+        if num_of_batteries > 1 {
+            // let mut new_slice = Vec::with_capacity(input.len() - best_position);
+            // println!("testing {}", input.len() - best_position);
+            // new_slice.copy_from_slice(&input[best_position..]);
+            let new_slice = &input[(best_position + 1)..];
+            Self::get_highest_possible_from_slice(new_slice, total_vec, num_of_batteries - 1)
         }
-
-        // println!("{}", first * 10 + second);
-        first * 10 + second
     }
 }
 
@@ -52,15 +60,19 @@ mod tests {
     #[test]
     fn high_joltage() {
         let mut bank = BatteryBank::new("987654321111111");
-        assert_eq!(bank.get_high_joltage(), 98);
+        assert_eq!(bank.get_high_joltage(2), 98);
+        assert_eq!(bank.get_high_joltage(12), 987654321111);
 
         bank = BatteryBank::new("811111111111119");
-        assert_eq!(bank.get_high_joltage(), 89);
+        assert_eq!(bank.get_high_joltage(2), 89);
+        assert_eq!(bank.get_high_joltage(12), 811111111119);
 
         bank = BatteryBank::new("234234234234278");
-        assert_eq!(bank.get_high_joltage(), 78);
+        assert_eq!(bank.get_high_joltage(2), 78);
+        assert_eq!(bank.get_high_joltage(12), 434234234278);
 
         bank = BatteryBank::new("818181911112111");
-        assert_eq!(bank.get_high_joltage(), 92);
+        assert_eq!(bank.get_high_joltage(2), 92);
+        assert_eq!(bank.get_high_joltage(12), 888911112111);
     }
 }

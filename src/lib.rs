@@ -21,9 +21,10 @@ pub fn solve(input_file: &str) -> (u64, u64) {
     let mut handles: Vec<std::thread::JoinHandle<()>> = Vec::with_capacity(battery_banks.len());
     for battery_bank in battery_banks {
         let result1_clone = Arc::clone(&result1);
-        // let result2_clone = Arc::clone(&result2);
+        let result2_clone = Arc::clone(&result2);
         let handle = thread::spawn(move || {
-            result1_clone.fetch_add(battery_bank.get_high_joltage() as u64, Ordering::SeqCst);
+            result1_clone.fetch_add(battery_bank.get_high_joltage(2), Ordering::SeqCst);
+            result2_clone.fetch_add(battery_bank.get_high_joltage(12), Ordering::SeqCst);
         });
         handles.push(handle);
     }
@@ -46,13 +47,13 @@ mod tests {
     fn example() {
         let (part_1, part_2) = solve("data/example.txt");
         assert_eq!(part_1, 357);
-        assert_eq!(part_2, 0);
+        assert_eq!(part_2, 3121910778619);
     }
 
     #[test]
     fn actual() {
         let (part_1, part_2) = solve("data/input.txt");
         assert_eq!(part_1, 17316);
-        // assert_eq!(part_2, 14582313461);
+        assert_eq!(part_2, 171741365473332);
     }
 }
