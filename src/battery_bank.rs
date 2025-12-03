@@ -28,13 +28,13 @@ impl BatteryBank {
         let mut best_position = 0;
         let mut value_at_best_position = input[0];
 
-        for position in 0..input.len() - num_of_batteries + 1 {
+        (0..input.len() - num_of_batteries + 1).for_each(|position| {
             let value_at_position = input[position];
             if value_at_position > value_at_best_position {
                 best_position = position;
                 value_at_best_position = value_at_position;
             }
-        }
+        });
         total_vec.push(value_at_best_position);
 
         if num_of_batteries > 1 {
