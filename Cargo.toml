@@ -3,7 +3,12 @@ name = "aoc_2025_03"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
+[dev-dependencies]
+criterion = { version = "0.8.0", features = [ "html_reports" ]}
+
+[[bench]]
+name = "my_bench"
+harness = false
 
 [lints.rust]
 dead_code = "allow"
@@ -17,9 +22,16 @@ strip = true
 
 [profile.fast]           # custom profile for maximum speed
 inherits = "release"
+lto = false
 
 [profile.small]          # custom profile for smallest size
 inherits = "release"
 opt-level = "z"
 lto = true
+
+[profile.bench]
+inherits = "fast"
+
+[dependencies]
+gnuplot = "0.0.46"
 
