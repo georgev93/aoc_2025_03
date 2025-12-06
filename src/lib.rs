@@ -1,10 +1,3 @@
-use std::sync::{
-    Arc,
-    atomic::{AtomicU64, Ordering},
-};
-
-use std::thread;
-
 mod battery_bank;
 use crate::battery_bank::BatteryBank;
 
@@ -14,72 +7,41 @@ pub fn solve(input_file: &str) -> (u64, u64) {
     let input_lines: Vec<&str> = input_file.lines().collect();
     let battery_banks = input_lines.iter().map(|s| BatteryBank::new(s));
 
-    let result1 = Arc::new(AtomicU64::new(0));
-    let result2 = Arc::new(AtomicU64::new(0));
+    let mut result1 = 0u64;
+    let mut result2 = 0u64;
 
-    let mut handles: Vec<std::thread::JoinHandle<()>> = Vec::with_capacity(battery_banks.len());
     for battery_bank in battery_banks {
-        let result1_clone = Arc::clone(&result1);
-        let result2_clone = Arc::clone(&result2);
-        let handle = thread::spawn(move || {
-            result1_clone.fetch_add(battery_bank.get_high_joltage(2), Ordering::SeqCst);
-            result2_clone.fetch_add(battery_bank.get_high_joltage(12), Ordering::SeqCst);
-        });
-        handles.push(handle);
+        result1 += battery_bank.get_high_joltage(2);
+        result2 += battery_bank.get_high_joltage(12);
     }
 
-    for handle in handles {
-        handle.join().expect("Thread panicked!");
-    }
-
-    (
-        result1.load(Ordering::Relaxed),
-        result2.load(Ordering::Relaxed),
-    )
+    (result1, result2)
 }
 
 pub fn solve_pt1(input_file: &str) -> u64 {
     let input_lines: Vec<&str> = input_file.lines().collect();
     let battery_banks = input_lines.iter().map(|s| BatteryBank::new(s));
 
-    let result1 = Arc::new(AtomicU64::new(0));
+    let mut result = 0u64;
 
-    let mut handles: Vec<std::thread::JoinHandle<()>> = Vec::with_capacity(battery_banks.len());
     for battery_bank in battery_banks {
-        let result1_clone = Arc::clone(&result1);
-        let handle = thread::spawn(move || {
-            result1_clone.fetch_add(battery_bank.get_high_joltage(2), Ordering::SeqCst);
-        });
-        handles.push(handle);
+        result += battery_bank.get_high_joltage(2);
     }
 
-    for handle in handles {
-        handle.join().expect("Thread panicked!");
-    }
-
-    result1.load(Ordering::Relaxed)
+    result
 }
 
 pub fn solve_pt2(input_file: &str) -> u64 {
     let input_lines: Vec<&str> = input_file.lines().collect();
     let battery_banks = input_lines.iter().map(|s| BatteryBank::new(s));
 
-    let result2 = Arc::new(AtomicU64::new(0));
+    let mut result = 0u64;
 
-    let mut handles: Vec<std::thread::JoinHandle<()>> = Vec::with_capacity(battery_banks.len());
     for battery_bank in battery_banks {
-        let result2_clone = Arc::clone(&result2);
-        let handle = thread::spawn(move || {
-            result2_clone.fetch_add(battery_bank.get_high_joltage(12), Ordering::SeqCst);
-        });
-        handles.push(handle);
+        result += battery_bank.get_high_joltage(12);
     }
 
-    for handle in handles {
-        handle.join().expect("Thread panicked!");
-    }
-
-    result2.load(Ordering::Relaxed)
+    result
 }
 
 #[cfg(test)]

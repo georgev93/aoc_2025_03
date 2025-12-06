@@ -1,5 +1,5 @@
-use std::fs::{File, read_to_string};
-use std::io::{BufRead, BufReader, Read};
+use std::fs::File;
+use std::io::{BufReader, Read};
 
 pub struct FileParser {
     file: File,
