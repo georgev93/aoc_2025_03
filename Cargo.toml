@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dev-dependencies]
-criterion = { version = "0.8.0", features = [ "html_reports" ]}
+criterion = "0.8.0"
 
 [[bench]]
 name = "my_bench"
@@ -22,7 +22,6 @@ strip = true
 
 [profile.fast]           # custom profile for maximum speed
 inherits = "release"
-lto = false
 
 [profile.small]          # custom profile for smallest size
 inherits = "release"
@@ -31,7 +30,4 @@ lto = true
 
 [profile.bench]
 inherits = "fast"
-
-[dependencies]
-gnuplot = "0.0.46"
 
